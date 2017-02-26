@@ -23,15 +23,14 @@ def find_loop(start_url):
     related=result.get('related')
     for name,link in related.items():
         if is_never_searched(link):
-            if is_matched(info,parse_page_result(link).get('info')):
-                print("{} 可能认识 {} Url::{}".format(info['name'],name,link))
-                POOL.append(link)
-                find_loop(link)
+            # if is_matched(info,parse_page_result(link).get('info')):
+            print("{} 可能认识 {}".format(info['name'],name,link))
+            POOL.append(link)
+            find_loop(link)
 
 
 # 解析页面的信息
 def parse_page_result(url):
-
     html=_load_dynamically_url(url)
     bs=BeautifulSoup(html,"lxml")
     result={
@@ -50,7 +49,7 @@ def is_never_searched(link):
         return True
 
 
-# TODO 多维度匹配检测 
+# TODO 多维度匹配检测
 def is_matched(info_a,info_b):
     return True
 
@@ -59,7 +58,6 @@ def is_matched(info_a,info_b):
 def _get_related(bs):
     related={}
     found=bs.find_all(href=re.compile('human'))
-
     for human in found:
         name=human.get_text()
         link="{}{}".format(domain,human['href'])
@@ -72,7 +70,6 @@ def _get_related(bs):
 def _get_info(bs):
     info={}
     # name=bs.select('div.f16.ng-binding')
-
     result=bs.find_all('div',{'class':'f16 ng-binding'})
     if result is not None:
         try:
